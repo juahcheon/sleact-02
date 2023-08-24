@@ -7,7 +7,7 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-    const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+    const { data, error, mutate } = useSWR('/api/users', fetcher);
     const [logInError, setLogInError] = useState(false);
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
@@ -17,7 +17,7 @@ const LogIn = () => {
         setLogInError(false);
         axios
             .post(
-            'http://localhost:3095/api/users/login',
+            '/api/users/login',
             { email, password },
             {
                 withCredentials: true,
@@ -38,7 +38,7 @@ const LogIn = () => {
     }
 
     if (data) {
-        return <Redirect to="/workspace/channel" />;
+        return <Redirect to="/workspace/sleact/channel/일반" />;
     }
 
   // console.log(error, userData);
