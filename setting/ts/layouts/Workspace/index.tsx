@@ -1,4 +1,4 @@
-import React, { FC, VFC, useCallback, useState } from "react";
+import React, { FC, VFC, useCallback, useEffect, useState } from "react";
 import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
@@ -18,6 +18,7 @@ import InviteWorkspaceModal from "@components/InviteWorkspaceModal";
 import InviteChannelModal from "@components/InviteChannelModal";
 import ChannelList from "@components/ChannelList";
 import DMList from "@components/DMList";
+import useSocket from "@hooks/useSocket";
 
 
 const Channel = loadable(() => import('@pages/Channel'));
@@ -40,6 +41,19 @@ const Workspace: VFC = () => {
 
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
   const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+  const [socket, disconnect] = useSocket(workspace);
+
+  useEffect(() => {
+    if (channelData && userData && socket) {
+      socket.emit('login', { id: userData.id, channels: channelData.map((v) => v.id) });
+    }
+  }, [socket, channelData, userData]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    }
+  }, [workspace, disconnect]);
 
   const onLogout = useCallback(() => {
     axios
@@ -49,7 +63,7 @@ const Workspace: VFC = () => {
       .then(() => [
         mutate(false, false)
       ]);
-  }, []);
+  }, [mutate]);
 
   const onCloseUserProfile = useCallback((e) => {
     e.stopPropagation();

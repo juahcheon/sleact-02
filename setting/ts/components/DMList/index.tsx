@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import useSWR from 'swr';
 import { CollapseButton } from "./styles";
 import { NavLink } from "react-router-dom";
+import useSocket from "@hooks/useSocket";
 
 const DMList: FC = () => {
   const { workspace } = useParams<{ workspace?: string }>();
@@ -16,7 +17,7 @@ const DMList: FC = () => {
     fetcher,
   );
 
-  // const [socket] = useSocket(workspace);
+  const [socket] = useSocket(workspace);
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [countList, setCountList] = useState<{ [key: string]: number }>({});
   const [onlineList, setOnlineList] = useState<number[]>([]);
@@ -30,14 +31,14 @@ const DMList: FC = () => {
     setOnlineList([]);
   }, [workspace]);
 
-  // useEffect(() => {
-  //   socket?.on('onlineList', (data: number[]) => {
-  //     setOnlineList(data);
-  //   });
-  //   return () => {
-  //     socket?.off('onlineList');
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    socket?.on('onlineList', (data: number[]) => {
+      setOnlineList(data);
+    });
+    return () => {
+      socket?.off('onlineList');
+    };
+  }, [socket]);
 
   return (
     <>
