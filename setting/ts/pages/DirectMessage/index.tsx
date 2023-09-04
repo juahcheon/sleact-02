@@ -23,7 +23,7 @@ const DirectMessage = () => {
   const onSubmitForm = useCallback((e) => {
     e.preventDefault();
     if (chat?.trim()) {
-      axios.post(`api/workspaces/${workspace}/dms/${id}/chats`. {
+      axios.post(`api/workspaces/${workspace}/dms/${id}/chats`, {
         content: chat,
       })
       .then(() => {
@@ -44,7 +44,13 @@ const DirectMessage = () => {
       <span>{userData.nickname}</span>
     </Header>
     <ChatList chatData={chatData} />
-    <ChatBox chat="" />
+    <ChatBox
+        onSubmitForm={onSubmitForm}
+        chat={chat}
+        onChangeChat={onChangeChat}
+        placeholder={`Message ${userData.nickname}`}
+        data={[]}
+      />
   </Container>
 };
 
