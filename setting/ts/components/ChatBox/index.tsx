@@ -1,4 +1,4 @@
-import React, { VFC, useCallback, useEffect, useRef } from "react";
+import React, { FC, VFC, useCallback, useEffect, useRef } from "react";
 import { ChatArea, EachMention, Form, MentionsTextarea, SendButton, Toolbox } from "./styles";
 import autosize from "autosize";
 import { Mention, SuggestionDataItem } from "react-mentions";
@@ -16,7 +16,7 @@ interface Props {
   data?: IUser[];
 }
 
-const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, data }) => {
+const ChatBox: FC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, data }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if( textareaRef.current ) {
@@ -24,7 +24,7 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, da
     }
   }, []);
   const onKeydownChat = useCallback((e) => {
-    if (e.key === 'Enter') {
+    if (!e.nativeEvent.isComposing && e.key === 'Enter') {
       if (!e.shiftKey) {
         e.preventDefault();
         onSubmitForm(e);
@@ -37,7 +37,7 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, da
     search: string, 
     highlightedDisplay: React.ReactNode, 
     index: number, 
-    focus: boolean,
+    focused: boolean,
   ) => React.ReactNode = useCallback (
     (member, search, highlightedDisplay, index, focus) => {
       if (!data) {
@@ -63,7 +63,6 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, da
           inputRef={textareaRef}
           allowSuggestionsAboveCursor
         >
-          <textarea value={chat} onChange={onChangeChat} onKeyDown={onKeydownChat} />
           <Mention appendSpaceOnAdd trigger="@"
             data={data?.map((v) => ({ id: v.id, display: v.nickname })) || []}
             renderSuggestion={renderUserSuggestion}

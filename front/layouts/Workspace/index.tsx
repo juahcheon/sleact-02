@@ -124,6 +124,7 @@ const Workspace = () => {
       disconnectSocket();
     };
   }, [disconnectSocket, workspace]);
+  
   useEffect(() => {
     if (channelData && userData) {
       console.info('로그인하자', socket);
