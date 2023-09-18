@@ -458,7 +458,11 @@ router.get(
 );
 
 function getKeyByValue(object, value) {
-  return Object.keys(object).find((key) => object[key] === value);
+  if (object && typeof object === 'object') {
+    return Object.keys(object).find((key) => object[key] === value);
+  } else {
+    return null;
+  }
 }
 router.post(
   "/workspaces/:workspace/dms/:id/chats",

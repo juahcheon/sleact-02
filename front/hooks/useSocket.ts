@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { io, Socket } from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 
 const backUrl = process.env.NODE_ENV === 'production' ? 'https://sleact.nodebird.com' : 'http://localhost:3095';
 
-const sockets: { [key: string]: Socket } = {};
-const useSocket = (workspace?: string): [Socket | undefined, () => void] => {
+const sockets: { [key: string]: SocketIOClient.Socket } = {};
+const useSocket = (workspace?: string): [SocketIOClient.Socket | undefined, () => void] => {
   const disconnect = useCallback(() => {
     if (workspace && sockets[workspace]) {
       console.log('소켓 연결 끊음');
@@ -20,10 +20,10 @@ const useSocket = (workspace?: string): [Socket | undefined, () => void] => {
       transports: ['websocket'],
     });
     console.info('create socket', workspace, sockets[workspace]);
-    sockets[workspace].on('connect_error', (err) => {
-      console.error(err);
-      console.log(`connect_error due to ${err.message}`);
-    });
+    // sockets[workspace].on('connect_error', (err) => {
+    //   console.error(err);
+    //   console.log(`connect_error due to ${err.message}`);
+    // });
   }
 
   return [sockets[workspace], disconnect];

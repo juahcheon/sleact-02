@@ -23,6 +23,7 @@ const ChatBox: FC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, dat
       autosize(textareaRef.current);
     }
   }, []);
+  
   const onKeydownChat = useCallback((e) => {
     if (!e.nativeEvent.isComposing && e.key === 'Enter') {
       if (!e.shiftKey) {
@@ -58,7 +59,7 @@ const ChatBox: FC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder, dat
           id="editor-chat"
           value={chat}
           onChange={onChangeChat}
-          onKeyPress={onKeydownChat}
+          onKeyDown={onKeydownChat}
           placeholder={placeholder}
           inputRef={textareaRef}
           allowSuggestionsAboveCursor

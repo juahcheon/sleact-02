@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "regexify-string": "^1.0.19",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/socket.io-client": "^1.4.36"
+  },
+  "name": "sleact",
+  "description": "강의교안 기여(Pull Request) 환영합니다.",
+  "version": "1.0.0",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juah",
+  "license": "ISC"
+}

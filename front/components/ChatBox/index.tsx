@@ -1,9 +1,12 @@
-import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox, EachMention } from '@components/ChatBox/styles';
-import { IUser } from '@typings/db';
-import autosize from 'autosize';
+import React, { FC, VFC, useCallback, useEffect, useRef } from "react";
+import { ChatArea, EachMention, Form, MentionsTextarea, SendButton, Toolbox } from "./styles";
+import autosize from "autosize";
+import { Mention, SuggestionDataItem } from "react-mentions";
+import { useParams } from "react-router";
+import useSWR from 'swr';
+import { IUser } from "@typings/db";
+import fetcher from "@utils/fetcher";
 import gravatar from 'gravatar';
-import React, { FC, useCallback, useEffect, useRef } from 'react';
-import { Mention, SuggestionDataItem } from 'react-mentions';
 
 interface Props {
   onSubmitForm: (e: any) => void;
@@ -15,7 +18,7 @@ interface Props {
 const ChatBox: FC<Props> = ({ onSubmitForm, chat, onChangeChat, placeholder, data }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    if (textareaRef.current) {
+    if ( textareaRef.current ) {
       autosize(textareaRef.current);
     }
   }, []);
@@ -63,7 +66,7 @@ const ChatBox: FC<Props> = ({ onSubmitForm, chat, onChangeChat, placeholder, dat
           onKeyPress={onKeydownChat}
           placeholder={placeholder}
           inputRef={textareaRef}
-          forceSuggestionsAboveCursor
+          allowSuggestionsAboveCursor
         >
           <Mention
             appendSpaceOnAdd

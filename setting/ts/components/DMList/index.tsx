@@ -29,14 +29,17 @@ const DMList: FC = () => {
   useEffect(() => {
     console.log('DMList: workspace 바꼈다', workspace);
     setOnlineList([]);
+    setCountList({});
   }, [workspace]);
 
   useEffect(() => {
     socket?.on('onlineList', (data: number[]) => {
       setOnlineList(data);
     });
+    // socket?.on('dm', onMessage);
     return () => {
       socket?.off('onlineList');
+      // socket?.off('dm', onMessage);
     };
   }, [socket]);
 
