@@ -6,15 +6,17 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 interface Props {
   chatSections?: {[key: string]: (IDM | IChat)[] };
-  setSize: (index: number) => void;
+  setSize: (f: (size: number) => number) => Promise<IDM[][] | undefined>;
   isEmpty: boolean;
   isReachingEnd: boolean;
 }
 
 const ChatList = forwardRef<Scrollbars, Props>(({ chatSections, setSize, isEmpty, isReachingEnd }, ref) => {
   const onscroll = useCallback((values) => {
-    if (values.scrollTop === 0) {
-        
+    if (values.scrollTop === 0 && !isReachingEnd) {
+        setSize((prevSize) => prevSize + 1).then(() => {
+
+        });
     }
   }, []);
 

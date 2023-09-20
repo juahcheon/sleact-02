@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Container, Header } from "./styles";
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite'
@@ -23,27 +23,50 @@ const DirectMessage = () => {
     fetcher,
   );
   const isEmpty = chatData?.[0]?.length === 0;
-  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length -1]?.length < 20);
+  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length -1]?.length < 20) || false;
   const scrollbarRef = useRef<Scrollbars>(null);
   const onSubmitForm = useCallback((e) => {
     e.preventDefault();
-    if (chat?.trim()) {
+    if (chat?.trim() && chatData) {
+      mutateChat((prevChatData) => {
+        prevChatData?.[0].unshift({
+          id: (chatData[0][0]?.id || 0) + 1,
+          content: savedChat,
+          SenderId: myData.id,
+          Sender: myData,
+          ReceiverId: userData.id,
+          Receiver: userData,
+          createdAt: new Date(),
+        });
+        return prevChatData;
+      })
+      .then(() => {
+        setChat('');
+      });
       axios.post(`api/workspaces/${workspace}/dms/${id}/chats`, {
         content: chat,
       })
       .then(() => {
-        mutateChat;
+        mutateChat();
         setChat('');
+        scrollbarRef.current?.scrollToBottom();
       })
       .catch(console.error);
     }
-  }, [chat]);
+  }, [chat, chatData]);
+
+  // 로딩 시 스크롤바 제일 아래로
+  useEffect(() => {
+    if (chatData?.length === 1) {
+      scrollbarRef.current?.scrollToBottom();
+    }
+  }, [chatData]);
 
   if (!userData || !myData) {
     return null;
   }
 
-  const chatSections = makeSection(chatData ? [...chatData].reverse() : [])
+  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []);
 
   return <Container>
     <Header>
