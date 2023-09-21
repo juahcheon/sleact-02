@@ -12,14 +12,22 @@ const Channel = () => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const { data: channelData } = useSWR(`/api/workspaces/${workspace}/channels`, fetcher);
 
+
+  
   const onSubmitForm = useCallback((e) => {
     e.preventDefault();
     setChat('');
   }, []);
+
   return (
     <Container>
       <Header>채널!</Header>
-      <ChatList />
+      <ChatList
+        chatSections={chatSections}
+        setSize={setSize}
+        isEmpty={isEmpty}
+        isReachingEnd={isReachingEnd}
+      />
       <ChatBox
         onSubmitForm={onSubmitForm}
         chat={chat}

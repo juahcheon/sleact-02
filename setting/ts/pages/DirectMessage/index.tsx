@@ -28,6 +28,7 @@ const DirectMessage = () => {
   const onSubmitForm = useCallback((e) => {
     e.preventDefault();
     if (chat?.trim() && chatData) {
+      const savedChat = chat;
       mutateChat((prevChatData) => {
         prevChatData?.[0].unshift({
           id: (chatData[0][0]?.id || 0) + 1,
@@ -39,21 +40,20 @@ const DirectMessage = () => {
           createdAt: new Date(),
         });
         return prevChatData;
-      })
+      }, false)
       .then(() => {
         setChat('');
+        scrollbarRef.current?.scrollToBottom();
       });
       axios.post(`api/workspaces/${workspace}/dms/${id}/chats`, {
         content: chat,
       })
       .then(() => {
         mutateChat();
-        setChat('');
-        scrollbarRef.current?.scrollToBottom();
       })
       .catch(console.error);
     }
-  }, [chat, chatData]);
+  }, [chat, chatData, myData, userData, workspace, id]);
 
   // 로딩 시 스크롤바 제일 아래로
   useEffect(() => {
@@ -73,7 +73,13 @@ const DirectMessage = () => {
       <img src={gravatar.url(userData.email, { s: '24px', d: 'retro' })} alt="{userData.nickname}" />
       <span>{userData.nickname}</span>
     </Header>
-    <ChatList chatSections={chatSections} ref={scrollbarRef} setSize={setSize} isEmpty={isEmpty} isReachingEnd={isReachingEnd} />
+    <ChatList 
+      chatSections={chatSections} 
+      ref={scrollbarRef} 
+      setSize={setSize} 
+      isEmpty={isEmpty} 
+      isReachingEnd={isReachingEnd} 
+    />
     <ChatBox
         onSubmitForm={onSubmitForm}
         chat={chat}
